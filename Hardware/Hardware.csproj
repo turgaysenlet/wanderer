@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AssemblyName>Wandarer.$(MSBuildProjectName)</AssemblyName>
+    <RootNamespace>Wandarer.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
+    <Platforms>x64</Platforms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Software\Software.csproj" />
+  </ItemGroup>
+
+</Project>

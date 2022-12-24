@@ -1,9 +1,10 @@
 ﻿using System.Drawing;
+using System.Xml.Linq;
 using SimplexNoise;
 
 namespace Wandarer.Software.Mapping
 {
-    public class Map
+    public class Map : Entity
     {
         public MapPoint[,] MapData { get; private set; }
         public int XBoxes { get; private set; }
@@ -18,12 +19,13 @@ namespace Wandarer.Software.Mapping
         public float ZScale { get; set; } = 0.002f;
 
         public Map(float xMeters, float yMeters, float scale)
-        {
+        {            
             XMeters = xMeters;
             YMeters = yMeters;
             Scale = scale;
             XBoxes = (int)(xMeters / scale);
             YBoxes = (int)(yMeters / scale);
+            Name = $"Map {XMeters}m x {YMeters}m";
             InitMap();
         }
 
@@ -152,6 +154,10 @@ namespace Wandarer.Software.Mapping
                     arrayColor[q++] = b;
                 }
             }
+        }
+        public override string ToString()
+        {
+            return $"{base.ToString()} - Entity {EntityNo}";
         }
     }
 }

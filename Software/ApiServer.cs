@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Wandarer.Software
 {
-    internal class ApiServer : Entity
+    public class ApiServer : Entity
     {
     }
 }

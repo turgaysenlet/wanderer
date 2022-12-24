@@ -12,6 +12,9 @@
     <ProjectReference Include="..\Hardware\Hardware.csproj" />
     <ProjectReference Include="..\ImageProcessing\ImageProcessing.csproj" />
     <ProjectReference Include="..\Input\Input.csproj" />
+    <ProjectReference Include="..\Mapping\Mapping.csproj" />
+    <ProjectReference Include="..\Motor\Motor.csproj" />
+    <ProjectReference Include="..\RobotApiServer\RobotApiServer.csproj" />
     <ProjectReference Include="..\Software\Software.csproj" />
   </ItemGroup>
 

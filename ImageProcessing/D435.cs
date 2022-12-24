@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Wandarer.Software.ImageProcessing
 {
-    public class D435
+    public class D435 : Wandarer.Hardware.Device
     {
         public Pipeline Pipeline { get; set; }
         public Context Context { get; set; }
@@ -38,32 +38,56 @@ namespace Wandarer.Software.ImageProcessing
 
         public D435()
         {
+            Name = "D435 - 3D Camera";
         }
         public void Start()
         {
             if (!Started)
             {
-                Context = new Context();
-                DeviceList devices = Context.QueryDevices();
-                Pipeline = new Pipeline(Context);
-                Config = new Config();
-                Config.EnableStream(Intel.RealSense.Stream.Color, 640, 480, Format.Bgr8, 30);
-                Config.EnableStream(Intel.RealSense.Stream.Depth, 640, 480, Format.Z16, 30);
-                PipelineProfile = Pipeline.Start(Config);
-                for (int i = 0; i < 10; i++)
+                try
                 {
+                    Context = new Context();
+                    DeviceList devices = Context.QueryDevices();
+                    if (devices == null || devices.Count == 0)
+                    {
+                        State = DeviceStateEnu.NotFound;
+                        return;
+                    }
+                    Pipeline = new Pipeline(Context);
+                    Config = new Config();
+                    Config.EnableStream(Intel.RealSense.Stream.Color, 640, 480, Format.Bgr8, 30);
+                    Config.EnableStream(Intel.RealSense.Stream.Depth, 640, 480, Format.Z16, 30);
+                    PipelineProfile = Pipeline.Start(Config);
+                    if (PipelineProfile.Device == null)
+                    {
+                        State = DeviceStateEnu.NotFound;
+                    }
+                    else
+                    {
+                        State = DeviceStateEnu.Found;
+                    }
+                    for (int i = 0; i < 10; i++)
+                    {
+                        GrabFrame();
+                    }
+                    State = DeviceStateEnu.Started;
+                    Started = true;
                     GrabFrame();
                 }
-                Started = true;
+                catch (Exception ex)
+                {
+                    Started = false;
+                    State = DeviceStateEnu.Failed;
+                }
             }
-            GrabFrame();
         }
 
-        public void GrabFrame()
+        public Tuple<VideoFrame, DepthFrame> GrabFrame()
         {
             var frames = Pipeline.WaitForFrames();
             ColorFrame = frames.ColorFrame;
             DepthFrame = frames.DepthFrame;
+            return new Tuple<VideoFrame, DepthFrame>(ColorFrame, DepthFrame);
         }
     }
 }

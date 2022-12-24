@@ -9,6 +9,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Hid.Net" Version="4.3.0-beta" />
+    <PackageReference Include="HIDDevices" Version="3.0.1" />
+    <PackageReference Include="hidlibrary" Version="3.3.40" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Hardware\Hardware.csproj" />
   </ItemGroup>
 

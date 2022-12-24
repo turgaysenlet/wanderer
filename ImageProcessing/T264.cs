@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace Wandarer.Software.ImageProcessing
 {
-    public class T264
+    public class T264 : Wandarer.Hardware.Device
     {
         public Pipeline Pipeline { get; set; }
         public Context Context { get; set; }
@@ -19,26 +20,49 @@ namespace Wandarer.Software.ImageProcessing
 
         public T264()
         {
+            Name = "T264 - Localization Camera";
         }
         public void Start()
         {
             if (!Started)
             {
-                Context = new Context();
-                DeviceList devices = Context.QueryDevices();
-                Pipeline = new Pipeline(Context);
-                Config = new Config();
-                Config.EnableStream(Intel.RealSense.Stream.Pose, Format.SixDOF);
-                PipelineProfile = Pipeline.Start(Config);
-                Started = true;
+                try
+                {
+                    Context = new Context();
+                    DeviceList devices = Context.QueryDevices();
+                    if (devices == null || devices.Count == 0)
+                    {
+                        State = DeviceStateEnu.NotFound;
+                        return;
+                    }
+                    Pipeline = new Pipeline(Context);
+                    Config = new Config();
+                    Config.EnableStream(Intel.RealSense.Stream.Pose, Format.SixDOF);
+                    PipelineProfile = Pipeline.Start(Config);
+                    if (PipelineProfile.Device == null)
+                    {
+                        State = DeviceStateEnu.NotFound;
+                    }
+                    else
+                    {
+                        State = DeviceStateEnu.Found;
+                    }
+                    GrabFrame();
+                    Started = true;
+                }
+                catch (Exception ex)
+                {
+                    Started = false;
+                    State = DeviceStateEnu.Failed;
+                }
             }
-            GrabFrame();
         }
 
-        public void GrabFrame()
+        public PoseFrame GrabFrame()
         {
             var frames = Pipeline.WaitForFrames();
             PoseFrame = frames.PoseFrame;
+            return PoseFrame;
         }
     }
 }

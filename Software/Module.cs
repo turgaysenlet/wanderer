@@ -26,5 +26,22 @@
         {
             return $"{base.ToString()} - Module {ModuleNo}";
         }
+
+        protected ModuleStateEnu state = ModuleStateEnu.Unknown;
+
+        public ModuleStateEnu State
+        {
+            get { return state; }
+            protected set { state = value; }
+        }
+
+        public enum ModuleStateEnu
+        {
+            Unknown,
+            Created,
+            Started,
+            Stopped,
+            Failed
+        }
     }
 }

@@ -12,6 +12,8 @@ namespace Wanderer.Hardware.Input
         public static List<IInputDevice> InputDevices { get; } = new List<IInputDevice>();
         public InputManager()
         {
+            State = ModuleStateEnu.Created;
+            Name = $"{GetType().Name}";
             var list1 = HidSharp.DeviceList.Local.GetAllDevices();
             var list2 = HidLibrary.HidDevices.Enumerate();
             foreach (var device1 in list2)
@@ -24,6 +26,7 @@ namespace Wanderer.Hardware.Input
                     //Console.WriteLine($"{((HidSharp.HidDevice)device2).ProductName} - {device1.Attributes.ProductHexId}-{device1.Attributes.VendorHexId} - {device1.Description}, IsConnected: {device1.IsConnected}, IsOpen: {device1.IsOpen}");
                 }
             }
+            State = ModuleStateEnu.Started;
         }
 
         private void CreateInputDevice(HidLibrary.HidDevice? device1, HidSharp.HidDevice? device2)

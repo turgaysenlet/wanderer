@@ -4,7 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <AssemblyName>Wandarer.$(MSBuildProjectName)</AssemblyName>
+    <AssemblyName>Wanderer.$(MSBuildProjectName)</AssemblyName>
     <Platforms>x64</Platforms>
   </PropertyGroup>
 

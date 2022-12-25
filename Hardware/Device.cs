@@ -1,6 +1,6 @@
-﻿using Wandarer.Software;
+﻿using Wanderer.Software;
 
-namespace Wandarer.Hardware
+namespace Wanderer.Hardware
 {
     public abstract class Device : Entity
     {

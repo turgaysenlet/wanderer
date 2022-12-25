@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Wandarer.Software;
+using Wanderer.Software;
 
 namespace Wanderer
 {

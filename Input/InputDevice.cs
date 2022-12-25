@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Wandarer.Hardware.Input
+namespace Wanderer.Hardware.Input
 {
     public partial interface IInputDevice
     {

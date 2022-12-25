@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace Wandarer.Software
+namespace Wanderer.Software
 {
     public class Entity
     {

@@ -1,6 +1,6 @@
 ﻿using HidLibrary;
-using Wandarer.Hardware;
-namespace Wandarer.Hardware.Input
+using Wanderer.Hardware;
+namespace Wanderer.Hardware.Input
 {
     public class Mouse : Device, IInputDevice
     {
@@ -10,10 +10,10 @@ namespace Wandarer.Hardware.Input
             if (!Mice.Where(a => a.vendorId.Equals(device1.Attributes.VendorHexId) && a.productId.Equals(device1.Attributes.ProductHexId)).Any())
             {
                 Mouse mouse = new Mouse(device1, device2);
-                Console.WriteLine($"Adding: {((HidSharp.HidDevice)device2).ProductName} - {device1.Attributes.ProductHexId}-{device1.Attributes.VendorHexId} - {device1.Description}, IsConnected: {device1.IsConnected}, IsOpen: {device1.IsOpen}");
+                // Console.WriteLine($"Adding: {((HidSharp.HidDevice)device2).ProductName} - {device1.Attributes.ProductHexId}-{device1.Attributes.VendorHexId} - {device1.Description}, IsConnected: {device1.IsConnected}, IsOpen: {device1.IsOpen}");
                 return AddMouse(mouse);
             }
-            Console.WriteLine($"Skipping: {((HidSharp.HidDevice)device2).ProductName} - {device1.Attributes.ProductHexId}-{device1.Attributes.VendorHexId} - {device1.Description}, IsConnected: {device1.IsConnected}, IsOpen: {device1.IsOpen}");
+            // Console.WriteLine($"Skipping: {((HidSharp.HidDevice)device2).ProductName} - {device1.Attributes.ProductHexId}-{device1.Attributes.VendorHexId} - {device1.Description}, IsConnected: {device1.IsConnected}, IsOpen: {device1.IsOpen}");
             return null;
         }
 

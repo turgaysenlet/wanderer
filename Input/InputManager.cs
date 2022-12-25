@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Wandarer.Software;
+using Wanderer.Software;
 
-namespace Wandarer.Hardware.Input
+namespace Wanderer.Hardware.Input
 {
     public class InputManager : Module
     {

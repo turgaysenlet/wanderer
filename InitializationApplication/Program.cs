@@ -1,5 +1,5 @@
 ﻿
-namespace Wandarer.Software.InitializationApplication
+namespace Wanderer.Software.InitializationApplication
 {
     internal class Program
     {

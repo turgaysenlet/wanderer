@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Wandarer.Software.ImageProcessing
+namespace Wanderer.Software.ImageProcessing
 {
-    public class D435 : Wandarer.Hardware.Device
+    public class D435 : Wanderer.Hardware.Device
     {
         public Pipeline Pipeline { get; set; }
         public Context Context { get; set; }
@@ -39,6 +39,7 @@ namespace Wandarer.Software.ImageProcessing
         public D435()
         {
             Name = "D435 - 3D Camera";
+            DeviceType = DeviceTypeEnu.Sensor;
         }
         public void Start()
         {

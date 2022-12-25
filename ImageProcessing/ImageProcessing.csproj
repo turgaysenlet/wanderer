@@ -4,16 +4,10 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <AssemblyName>Wandarer.$(MSBuildProjectName)</AssemblyName>
-    <RootNamespace>Wandarer.Software.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
+    <AssemblyName>Wanderer.$(MSBuildProjectName)</AssemblyName>
+    <RootNamespace>Wanderer.Software.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
     <Platforms>x64</Platforms>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Reference Include="Intel.RealSense">
-      <HintPath>..\..\..\..\Program Files (x86)\Intel RealSense SDK 2.0\bin\x64\Intel.Realsense.dll</HintPath>
-    </Reference>
-  </ItemGroup>
 
   <ItemGroup>
     <NativeLibs Remove="realsense2.dll" />
@@ -38,6 +32,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Hardware\Hardware.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Intel.RealSense">
+      <HintPath>C:\Program Files (x86)\Intel RealSense SDK 2.0\bin\x64\Intel.Realsense.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

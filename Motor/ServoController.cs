@@ -1,4 +1,4 @@
-﻿using Wandarer.Hardware;
+﻿using Wanderer.Hardware;
 
 namespace Wanderer.Hardware.Motor
 {

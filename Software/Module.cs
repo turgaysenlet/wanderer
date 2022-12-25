@@ -1,4 +1,4 @@
-﻿namespace Wandarer.Software
+﻿namespace Wanderer.Software
 {
     public abstract class Module : Entity
     {

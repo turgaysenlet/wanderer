@@ -6,9 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace Wandarer.Software.ImageProcessing
+namespace Wanderer.Software.ImageProcessing
 {
-    public class T264 : Wandarer.Hardware.Device
+    public class T264 : Wanderer.Hardware.Device
     {
         public Pipeline Pipeline { get; set; }
         public Context Context { get; set; }
@@ -21,6 +21,7 @@ namespace Wandarer.Software.ImageProcessing
         public T264()
         {
             Name = "T264 - Localization Camera";
+            DeviceType = DeviceTypeEnu.Sensor;
         }
         public void Start()
         {
@@ -48,6 +49,7 @@ namespace Wandarer.Software.ImageProcessing
                         State = DeviceStateEnu.Found;
                     }
                     GrabFrame();
+                    State = DeviceStateEnu.Started;
                     Started = true;
                 }
                 catch (Exception ex)

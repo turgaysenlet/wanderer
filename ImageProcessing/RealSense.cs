@@ -1,6 +1,6 @@
 ﻿using Intel.RealSense;
 
-namespace Wandarer.Software.ImageProcessing
+namespace Wanderer.Software.ImageProcessing
 {
     public class RealSense
     {

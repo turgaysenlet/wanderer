@@ -5,7 +5,7 @@ using OpenGL;
 using System;
 using System.Numerics;
 using System.Text;
-using Wandarer.Software.ImageProcessing;
+using Wanderer.Software.ImageProcessing;
 using static OpenGL.Gl;
 
 namespace Wanderer
@@ -13,7 +13,7 @@ namespace Wanderer
     public partial class MainForm : Form
     {
         public RealSense RealSense { get; set; } = new RealSense();
-        public Wandarer.Software.Mapping.Map Map { get; set; } = new Wandarer.Software.Mapping.Map(10, 10, 0.1f);
+        public Wanderer.Software.Mapping.Map Map { get; set; } = new Wanderer.Software.Mapping.Map(10, 10, 0.1f);
         public Config Config = new Config();
         private VertexArray _VertexArray;
         public MainForm()

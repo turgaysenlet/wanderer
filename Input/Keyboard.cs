@@ -1,9 +1,9 @@
 ﻿using Hid.Net;
 using HidSharp;
 using DeviceNet = Device.Net;
-namespace Wandarer.Hardware.Input
+namespace Wanderer.Hardware.Input
 {
-    public class Keyboard : Wandarer.Hardware.Device, IInputDevice
+    public class Keyboard : Wanderer.Hardware.Device, IInputDevice
     {
             public static List<Keyboard> Keyboards { get; } = new List<Keyboard>();
         public static Keyboard Create(HidLibrary.HidDevice device1, HidSharp.HidDevice device2)

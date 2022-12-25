@@ -2,7 +2,7 @@
 using System.Xml.Linq;
 using SimplexNoise;
 
-namespace Wandarer.Software.Mapping
+namespace Wanderer.Software.Mapping
 {
     public class Map : Entity
     {

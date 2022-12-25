@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Wandarer.Software
+namespace Wanderer.Software
 {
     public class ApiServer : Entity
     {

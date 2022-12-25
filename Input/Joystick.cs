@@ -1,6 +1,6 @@
 ﻿using HidLibrary;
-using Wandarer.Hardware;
-namespace Wandarer.Hardware.Input
+using Wanderer.Hardware;
+namespace Wanderer.Hardware.Input
 {
     public class Joystick : Device, IInputDevice
     {

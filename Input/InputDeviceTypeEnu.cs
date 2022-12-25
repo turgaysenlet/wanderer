@@ -1,4 +1,4 @@
-﻿namespace Wandarer.Hardware.Input
+﻿namespace Wanderer.Hardware.Input
 {
     public enum InputDeviceTypeEnu
     {

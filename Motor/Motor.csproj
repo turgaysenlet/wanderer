@@ -8,18 +8,39 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Bytecode.dll" />
+    <None Remove="UsbWrapper.dll" />
+    <None Remove="Usc.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Bytecode.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UsbWrapper.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Usc.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Hardware\Hardware.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Reference Include="Bytecode">
       <HintPath>C:\Program Files (x86)\Pololu\Maestro\bin\Bytecode.dll</HintPath>
+      <Private></Private>
     </Reference>
     <Reference Include="UsbWrapper">
       <HintPath>C:\Program Files (x86)\Pololu\Maestro\bin\UsbWrapper.dll</HintPath>
+      <Private></Private>
     </Reference>
     <Reference Include="Usc">
       <HintPath>C:\Program Files (x86)\Pololu\Maestro\bin\Usc.dll</HintPath>
+      <Private></Private>
     </Reference>
   </ItemGroup>
 

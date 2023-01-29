@@ -9,3 +9,5 @@ Release/
 net6.0-windows/
 obj/
 .vs
+/Gps/.svn
+/Gps/Properties/.svn

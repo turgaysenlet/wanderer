@@ -4,11 +4,11 @@ using System.Text;
 using GeoFramework;
 using GeoFramework.Gps;
 using GeoFramework.Gps.IO;
-using SharedTypes.Localization;
+using Wanderer.Software.Mapping;
 
-namespace Localization.Gps
+namespace Wanderer.Hardware
 {
-    public class GpsCls
+    public class GpsCls : Wanderer.Hardware.Device
     {
         GeoFramework.Gps.Nmea.NmeaInterpreter nmeaInterpreter1 = new GeoFramework.Gps.Nmea.NmeaInterpreter();
 

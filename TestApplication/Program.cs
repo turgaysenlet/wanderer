@@ -3,6 +3,7 @@ using Wanderer.Hardware.Input;
 using Wanderer.Software.ImageProcessing;
 using Wanderer.Software.Mapping;
 using Wanderer.Software;
+using Wanderer.Software.Speech;
 using Wanderer.Software.Api;
 
 namespace Wanderer.Software.TestApplication

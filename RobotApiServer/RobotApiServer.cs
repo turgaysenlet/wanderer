@@ -26,7 +26,7 @@ namespace Wanderer.Software.Api
             get
             {
                 //return $"http://localhost:{Port}";
-                return $"http://192.168.1.102:{Port}";
+                return $"http://192.168.1.69:{Port}";
             }
         }
         public RobotApiServer()
@@ -89,12 +89,36 @@ namespace Wanderer.Software.Api
             ModulesWithIdApiEndpoint(app);
 
             CameraViewEndpoint(app);
+            CameraDistanceEndpoint(app);
+            SpeechApiEndpoint(app);
 
             this.Name = $"{GetType().Name} on {Address}";
             State = ModuleStateEnu.Started;
             app.Run(Address);
         }
 
+        private void SpeechApiEndpoint(WebApplication app)
+        {
+            app.MapGet("/speak/{text}", (HttpContext httpContext, string text) =>
+            {
+                Wanderer.Software.Speech.SpeechSynthesisServer.Instance.Speak(text);
+                return text;// Results.Text(text);
+            });
+        }
+        private void CameraDistanceEndpoint(WebApplication app)
+        {
+            app.MapGet("/distance", (HttpContext httpContext) =>
+            {
+                D435 d435 = ((D435)Wanderer.Hardware.Device.Devices.Where(device => device.GetType() == typeof(D435)).FirstOrDefault());
+                var distance = d435.Distance();
+                return distance;
+            });
+            //app.MapGet("/process-image/{strImage}", (string strImage, HttpContext http, CancellationToken token) =>
+            //{
+            //    http.Response.Headers.CacheControl = $"public,max-age={TimeSpan.FromHours(24).TotalSeconds}";
+            //    return Results.Stream(stream => ResizeImageAsync(strImage, stream, token), "image/jpeg");
+            //});
+        }
         private void CameraViewEndpoint(WebApplication app)
         {
             app.MapGet("/cameras/{id}", (HttpContext httpContext, string id) =>
@@ -112,7 +136,6 @@ namespace Wanderer.Software.Api
             //    http.Response.Headers.CacheControl = $"public,max-age={TimeSpan.FromHours(24).TotalSeconds}";
             //    return Results.Stream(stream => ResizeImageAsync(strImage, stream, token), "image/jpeg");
             //});
-
         }
         private async Task ResizeImageAsync(string strImage, Stream stream, CancellationToken token)
         {

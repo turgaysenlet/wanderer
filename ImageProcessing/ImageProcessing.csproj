@@ -7,6 +7,7 @@
     <AssemblyName>Wanderer.$(MSBuildProjectName)</AssemblyName>
     <RootNamespace>Wanderer.Software.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
     <Platforms>x64</Platforms>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>

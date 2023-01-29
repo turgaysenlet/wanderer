@@ -11,4 +11,16 @@
     <ProjectReference Include="..\Hardware\Hardware.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="Bytecode">
+      <HintPath>C:\Program Files (x86)\Pololu\Maestro\bin\Bytecode.dll</HintPath>
+    </Reference>
+    <Reference Include="UsbWrapper">
+      <HintPath>C:\Program Files (x86)\Pololu\Maestro\bin\UsbWrapper.dll</HintPath>
+    </Reference>
+    <Reference Include="Usc">
+      <HintPath>C:\Program Files (x86)\Pololu\Maestro\bin\Usc.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

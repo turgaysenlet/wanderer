@@ -2,7 +2,7 @@
 
 namespace Wanderer.Hardware.Motor
 {
-    internal class ServoController : Device
+    public class ServoController : Device
     {
     }
 }

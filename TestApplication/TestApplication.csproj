@@ -16,6 +16,7 @@
     <ProjectReference Include="..\Motor\Motor.csproj" />
     <ProjectReference Include="..\RobotApiServer\RobotApiServer.csproj" />
     <ProjectReference Include="..\Software\Software.csproj" />
+    <ProjectReference Include="..\Speech\Speech.csproj" />
   </ItemGroup>
 
 </Project>

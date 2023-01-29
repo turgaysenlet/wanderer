@@ -19,6 +19,7 @@
     <ProjectReference Include="..\Hardware\Hardware.csproj" />
     <ProjectReference Include="..\ImageProcessing\ImageProcessing.csproj" />
     <ProjectReference Include="..\Software\Software.csproj" />
+    <ProjectReference Include="..\Speech\Speech.csproj" />
   </ItemGroup>
 
 </Project>

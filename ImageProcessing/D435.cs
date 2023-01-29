@@ -51,9 +51,19 @@ namespace Wanderer.Software.ImageProcessing
         {
             get
             {
-                AutoGrab();
-                VideoFrame depthColorFrame = colorizer.Process<VideoFrame>(DepthFrame);
-                return new Bitmap(depthColorFrame.Width, depthColorFrame.Height, depthColorFrame.Stride, System.Drawing.Imaging.PixelFormat.Format24bppRgb, depthColorFrame.Data);
+                try
+                {
+                    AutoGrab();
+                    if (colorizer != null)
+                    {
+                        VideoFrame depthColorFrame = colorizer.Process<VideoFrame>(DepthFrame);
+                        return new Bitmap(depthColorFrame.Width, depthColorFrame.Height, depthColorFrame.Stride, System.Drawing.Imaging.PixelFormat.Format24bppRgb, depthColorFrame.Data);
+                    }
+                }
+                catch
+                {
+                }
+                return new Bitmap(DepthFrame.Width, DepthFrame.Height);
             }
         }
 
@@ -108,15 +118,38 @@ namespace Wanderer.Software.ImageProcessing
         {
             try
             {
-                var frames = Pipeline.WaitForFrames();
-                AutoGrabFrameTime = DateTime.Now;
-                ColorFrame = frames.ColorFrame;
-                DepthFrame = frames.DepthFrame;
-                return new Tuple<VideoFrame, DepthFrame>(ColorFrame, DepthFrame);
+                if (Pipeline != null)
+                {
+                    var frames = Pipeline.WaitForFrames();
+                    AutoGrabFrameTime = DateTime.Now;
+                    ColorFrame = frames.ColorFrame;
+                    DepthFrame = frames.DepthFrame;
+                    return new Tuple<VideoFrame, DepthFrame>(ColorFrame, DepthFrame);
+                }
+                return new Tuple<VideoFrame, DepthFrame>(null, null);
             }
             catch (Exception ex)
             {
                 return new Tuple<VideoFrame, DepthFrame>(null, null);
+            }
+        }
+
+        public float Distance(int i = -1, int j = -1)
+        {
+            AutoGrab();
+            if (i < 0)
+            {
+                i = DepthFrame.Width / 2;
+            }
+            if (j < 0)
+            {
+                j = DepthFrame.Height / 2;
+            }
+            unsafe
+            {
+                ushort* depth_data = (ushort*)DepthFrame.Data.ToPointer();
+                ushort d = (ushort)depth_data[DepthFrame.Width * j + i];
+                return (float)d;
             }
         }
     }

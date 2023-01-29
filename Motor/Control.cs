@@ -655,7 +655,6 @@ namespace SharedTypes
         }
         #endregion
 
-
         #region Robot State
         [Serializable()]
         public class StateChartCls<T> where T : class, IConvertible, new()

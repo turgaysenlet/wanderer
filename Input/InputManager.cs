@@ -7,7 +7,7 @@ using Wanderer.Software;
 
 namespace Wanderer.Hardware.Input
 {
-    public class InputManager : Module
+    public class InputManager : ModuleCls
     {
         public static List<IInputDevice> InputDevices { get; } = new List<IInputDevice>();
         public InputManager()

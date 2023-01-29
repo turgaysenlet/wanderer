@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Wanderer.Software
 {
-    public class ApiServer : Module
+    public class ApiServerCls : ModuleCls
     {
     }
 }

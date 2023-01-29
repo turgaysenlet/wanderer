@@ -4,9 +4,9 @@ using SimplexNoise;
 
 namespace Wanderer.Software.Mapping
 {
-    public class Map : Entity
+    public class MapCls : EntityCls
     {
-        public MapPoint[,] MapData { get; private set; }
+        public MapPointCls[,] MapData { get; private set; }
         public int XBoxes { get; private set; }
         public int YBoxes { get; private set; }
         public float XMeters { get; private set; }
@@ -18,7 +18,7 @@ namespace Wanderer.Software.Mapping
         public float CenterY { get; private set; }
         public float ZScale { get; set; } = 0.002f;
 
-        public Map(float xMeters, float yMeters, float scale)
+        public MapCls(float xMeters, float yMeters, float scale)
         {            
             XMeters = xMeters;
             YMeters = yMeters;
@@ -32,13 +32,13 @@ namespace Wanderer.Software.Mapping
         private void InitMap()
         {
             float[,] noise = Noise.Calc2D(XBoxes, YBoxes, Scale);
-            MapData = new MapPoint[XBoxes, YBoxes];
+            MapData = new MapPointCls[XBoxes, YBoxes];
             for (int i = 0; i < XBoxes; i++)
             {
                 for (int j = 0; j < YBoxes; j++)
                 {
                     int n = (int)(noise[i, j]);
-                    MapData[i, j] = new MapPoint();
+                    MapData[i, j] = new MapPointCls();
                     MapData[i, j].X = i * Scale;
                     MapData[i, j].Y = j * Scale;
                     MapData[i, j].Height = noise[i, j];

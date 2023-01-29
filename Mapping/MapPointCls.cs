@@ -2,7 +2,7 @@
 
 namespace Wanderer.Software.Mapping
 {
-    public struct MapPoint
+    public struct MapPointCls
     {
         public float X;
         public float Y;

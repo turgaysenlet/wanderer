@@ -1,11 +1,11 @@
 ﻿namespace Wanderer.Software
 {
-    public abstract class Module : Entity
+    public abstract class ModuleCls : EntityCls
     {
-        public static List<Module> Modules { get; } = new List<Module>();
+        public static List<ModuleCls> Modules { get; } = new List<ModuleCls>();
         public static int ModuleCount { get; private set; } = 0;
         public int ModuleNo { get; private set; } = 0;
-        private static Module AddModule(Module module)
+        private static ModuleCls AddModule(ModuleCls module)
         {
             if (module != null)
             {
@@ -14,11 +14,11 @@
             }
             return module;
         }
-        public Module()
+        public ModuleCls()
         {
             AddModule(this);
         }
-        ~Module()
+        ~ModuleCls()
         {
             Modules.Remove(this);
         }

@@ -17,10 +17,10 @@ namespace Wanderer.Software.TestApplication
             //Mouse mouse = new Mouse();
             RealSense realSense = new RealSense();
             realSense.Start();
-            Map map = new Map(10, 10, 0.1f);
-            var entities = Entity.Entities;
+            MapCls map = new MapCls(10, 10, 0.1f);
+            var entities = EntityCls.Entities;
             var devices = Wanderer.Hardware.Device.Devices;
-            var modules = Module.Modules;
+            var modules = ModuleCls.Modules;
             foreach ( var entity in entities )
             {
                 Console.WriteLine(entity);

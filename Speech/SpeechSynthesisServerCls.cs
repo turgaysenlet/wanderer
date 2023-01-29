@@ -2,11 +2,11 @@
 
 namespace Wanderer.Software.Speech
 {
-    public class SpeechSynthesisServer : Module
+    public class SpeechSynthesisServerCls : ModuleCls
     {
         private SpeechSynthesizer speechSynthesizer;
-        public static SpeechSynthesisServer Instance { get; } = new SpeechSynthesisServer();
-        protected SpeechSynthesisServer()
+        public static SpeechSynthesisServerCls Instance { get; } = new SpeechSynthesisServerCls();
+        protected SpeechSynthesisServerCls()
         {
             State = ModuleStateEnu.Created;
             Name = $"{GetType().Name}";

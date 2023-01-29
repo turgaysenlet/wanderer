@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Wanderer.Software
 {
-    public class Application : Entity
+    public class ApplicationCls : EntityCls
     {
     }
 }

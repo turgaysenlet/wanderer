@@ -7,7 +7,7 @@ using Wanderer.Software;
 
 namespace Wanderer
 {
-    public class MainInterfaceModule : Module
+    public class MainInterfaceModule : ModuleCls
     {
         public MainInterfaceModule()
         {

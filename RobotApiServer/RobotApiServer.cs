@@ -114,7 +114,7 @@ namespace Wanderer.Software.Api
                 if (t264 != null) {
                     var pose = t264.PosePositionOrientationDegrees();
                     map.LocationX = (float)pose[0];
-                    map.LocationX = (float)pose[1];
+                    map.LocationY = (float)pose[1];
                 }
                 Bitmap image = map.GenerateBitmap(1000, 1000);
                 httpContext.Response.Headers.CacheControl = $"public,max-age={TimeSpan.FromSeconds(1).TotalSeconds}";

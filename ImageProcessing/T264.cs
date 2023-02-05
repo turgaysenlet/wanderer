@@ -77,6 +77,8 @@ namespace Wanderer.Software.ImageProcessing
         }
         public void GrabFrame()
         {
+            // Collect GC or otherwise WaitForFrames gets stuck after 16 frames.
+            GC.Collect();
             var frames = Pipeline.WaitForFrames();
             PoseFrame = frames.PoseFrame;
             FrameNo++;

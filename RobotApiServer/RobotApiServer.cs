@@ -60,7 +60,7 @@ namespace Wanderer.Software.Api
             app.Run($"http://localhost:{Port}");
         }
        
-        public void Start(D435 d435)
+        public void Start()
         {
             string[] args = null;
             var builder = WebApplication.CreateBuilder(args);
@@ -97,7 +97,7 @@ namespace Wanderer.Software.Api
 
             this.Name = $"{GetType().Name} on {Address}";
             State = ModuleStateEnu.Started;
-            app.Run(Address);
+            app.Run();
         }
         
         private void SpeechApiEndpoint(WebApplication app)
@@ -235,19 +235,23 @@ namespace Wanderer.Software.Api
         }
         private string CreateContentCameras()
         {
-            return $@"<div class=""split left"">
-              <div class=""centered"">
-                <h3>Color</h3>
-                <img src=""/cameras/0"""" alt=""Color camera"">
-              </div>
-            </div>
+            //return $@"<div class=""split left"">
+            //  <div class=""centered"">
+            //    <h3>Color</h3>
+            //    <img src=""/cameras/0"""" alt=""Color camera"">
+            //  </div>
+            //</div>
 
-            <div class=""split right"">
-              <div class=""centered"">
-                <h3>Depth</h3>
-                <img src=""/cameras/01"" alt=""Depth camera"">
-              </div>
-            </div>";
+            //<div class=""split right"">
+            //  <div class=""centered"">
+            //    <h3>Depth</h3>
+            //    <img src=""/cameras/01"" alt=""Depth camera"">
+            //  </div>
+            //</div>";
+            return $@"<img src=""/cameras/0"" id=""reloader0"" onLoad=""setTimeout( () => 
+            {{ document.getElementById('reloader0').src='/cameras/0' + '?' + new Date().getMilliseconds() }},200)"" width=""320"" height=""240""/>
+            <img src=""/cameras/1"" id=""reloader1"" onLoad=""setTimeout( () => 
+            {{ document.getElementById('reloader1').src='/cameras/1' + '?' + new Date().getMilliseconds() }},200)"" width=""320"" height=""240""/>";
         }
 
         public ContentResult GetHtml()

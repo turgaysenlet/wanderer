@@ -6,6 +6,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Wanderer.Software.ImageProcessing
@@ -83,6 +84,23 @@ namespace Wanderer.Software.ImageProcessing
         Timer timer;
         public void Start()
         {
+            //var pipe = new Pipeline();
+            //pipe.Start();
+
+            //int frameNo = 0;
+            //while (true)
+            //{
+            //    using (var frames = pipe.WaitForFrames())
+            //    using (var depth = frames.DepthFrame)
+            //    {
+            //        //Console.WriteLine("The camera is pointing at an object " +
+            //        //    depth.GetDistance(depth.Width / 2, depth.Height / 2).ToString("0.00") + " meters away\t");
+            //        Console.WriteLine(frameNo++);
+            //        GrabFrame();
+            //        //Console.SetCursorPosition(0, 0);
+            //    }
+            //}
+
             if (!Started)
             {
                 try
@@ -114,6 +132,16 @@ namespace Wanderer.Software.ImageProcessing
                         State = DeviceStateEnu.Found;
                         Console.WriteLine($"Starting D435 - Pipeline started - device found");
                     }
+                    //while (true)
+                    //{
+                    //    using (var frames = Pipeline.WaitForFrames())
+                    //    using (var depth = frames.DepthFrame)
+                    //    {
+                    //        GrabFrame();
+                    //        Console.WriteLine("The camera is pointing at an object " +
+                    //            DepthFrame.GetDistance(depth.Width / 2, depth.Height / 2).ToString("0.00") + " meters away\t");
+                    //    }
+                    //}
                     for (int i = 0; i < 2; i++)
                     {
                         GrabFrame();
@@ -132,10 +160,13 @@ namespace Wanderer.Software.ImageProcessing
                 timer = new Timer(new TimerCallback(TimerElapsed), null, 0, 100);
             }
         }
+        Thread thread;
+
         private void TimerElapsed(Object stateInfo)
         {
             GrabFrame();
         }
+        
         private void GrabFrame()
         {
             try
@@ -145,22 +176,21 @@ namespace Wanderer.Software.ImageProcessing
                     using (var frames = Pipeline.WaitForFrames())
                     {
                         AutoGrabFrameTime = DateTime.Now;
-                        //lock (this)
+                        lock (this)
                         {
+                            // If you don't collect here, WaitForFrames gets stuck after 16 frames
+                            GC.Collect();
                             ColorFrame = frames.ColorFrame;
                             DepthFrame = frames.DepthFrame;
                             FrameNo++;
                             Console.WriteLine($"D435 frame captured: {FrameNo}");
                         }
-                        //return new Tuple<VideoFrame, DepthFrame>(ColorFrame, DepthFrame);
                     }
                 }
-                //return new Tuple<VideoFrame, DepthFrame>(null, null);
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error: {ex.Message}");
-                //return new Tuple<VideoFrame, DepthFrame>(null, null);
             }
         }
 
@@ -175,12 +205,13 @@ namespace Wanderer.Software.ImageProcessing
             {
                 j = DepthFrame.Height / 2;
             }
-            unsafe
-            {
-                ushort* depth_data = (ushort*)DepthFrame.Data.ToPointer();
-                ushort d = (ushort)depth_data[DepthFrame.Width * j + i];
-                return (float)d;
-            }
+            return DepthFrame.GetDistance(i, j);
+            //unsafe
+            //{                
+            //    ushort* depth_data = (ushort*)DepthFrame.Data.ToPointer();
+            //    ushort d = (ushort)depth_data[DepthFrame.Width * j + i];
+            //    return (float)d;
+            //}
         }
     }
 }

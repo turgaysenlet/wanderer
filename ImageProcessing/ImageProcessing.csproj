@@ -11,6 +11,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Emgu.CV" Version="4.6.0.5131" />
+    <PackageReference Include="Emgu.CV.Bitmap" Version="4.6.0.5131" />
+    <PackageReference Include="Emgu.CV.runtime.windows" Version="4.6.0.5131" />
+    <PackageReference Include="PclSharp" Version="1.8.1.20180820-beta07" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Hardware\Hardware.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <NativeLibs Remove="realsense2.dll" />
   </ItemGroup>
 
@@ -25,19 +36,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Emgu.CV" Version="4.6.0.5131" />
-    <PackageReference Include="Emgu.CV.Bitmap" Version="4.6.0.5131" />
-    <PackageReference Include="Emgu.CV.runtime.windows" Version="4.6.0.5131" />
-    <PackageReference Include="PclSharp" Version="1.8.1.20180820-beta07" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Hardware\Hardware.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Reference Include="Intel.RealSense">
-      <HintPath>C:\Program Files (x86)\Intel RealSense SDK 2.0\bin\x64\Intel.Realsense.dll</HintPath>
+      <HintPath>..\..\..\..\Program Files (x86)\Intel RealSense SDK 2.0\bin\x64\Intel.Realsense.dll</HintPath>
     </Reference>
   </ItemGroup>
 

@@ -10,13 +10,13 @@ namespace Wanderer.Software.ImageProcessing
         public RealSense()
         {
             D435 = new D435();
-            T264 = new T264();
+            //T264 = new T264();
         }
 
         public void Start()
         {
             D435.Start();
-            T264.Start();
+            //T264.Start();
         }
     }
 }

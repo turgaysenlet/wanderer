@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Wanderer.Software.ImageProcessing
@@ -26,6 +27,8 @@ namespace Wanderer.Software.ImageProcessing
         public DepthFrame DepthFrame { get; private set; }
         private Colorizer colorizer = new Colorizer();
         public bool Started { get; private set; }
+        private Thread FrameCaptureThread;
+        private CancellationTokenSource cts = new CancellationTokenSource();
 
         public Bitmap ColorBitmap
         {
@@ -42,7 +45,10 @@ namespace Wanderer.Software.ImageProcessing
             {
                 if (DateTime.Now > AutoGrabFrameTime + AutoGrabFrameTtl)
                 {
-                    GrabFrame();
+                    if (DepthFrame == null || ColorFrame == null)
+                    {
+                        GrabFrame();
+                    }
                 }
             }
         }
@@ -67,38 +73,48 @@ namespace Wanderer.Software.ImageProcessing
             }
         }
 
+        public long FrameNo { get; private set; } = 0;
+
         public D435()
         {
             Name = "D435 - 3D Camera";
             DeviceType = DeviceTypeEnu.Sensor;
         }
+        Timer timer;
         public void Start()
         {
             if (!Started)
             {
                 try
                 {
+                    Console.WriteLine($"Starting D435 - Initial");
                     Context = new Context();
                     DeviceList devices = Context.QueryDevices();
                     if (devices == null || devices.Count == 0)
                     {
+                        Console.WriteLine($"Starting D435 - No devices found");
                         State = DeviceStateEnu.NotFound;
                         return;
                     }
+                    Console.WriteLine($"Starting D435 - Found devices: {devices.Count}");
                     Pipeline = new Pipeline(Context);
                     Config = new Config();
-                    Config.EnableStream(Intel.RealSense.Stream.Color, 640, 480, Format.Bgr8, 30);
-                    Config.EnableStream(Intel.RealSense.Stream.Depth, 640, 480, Format.Z16, 30);
+                    Config.EnableStream(Intel.RealSense.Stream.Color, 640, 480, Format.Bgr8, 15);
+                    Config.EnableStream(Intel.RealSense.Stream.Depth, 640, 480, Format.Z16, 15);
+                    Console.WriteLine($"Starting D435 - Config created");
                     PipelineProfile = Pipeline.Start(Config);
+                    Console.WriteLine($"Starting D435 - Pipeline started");
                     if (PipelineProfile.Device == null)
                     {
                         State = DeviceStateEnu.NotFound;
+                        Console.WriteLine($"Starting D435 - Pipeline started - no device found");
                     }
                     else
                     {
                         State = DeviceStateEnu.Found;
+                        Console.WriteLine($"Starting D435 - Pipeline started - device found");
                     }
-                    for (int i = 0; i < 10; i++)
+                    for (int i = 0; i < 2; i++)
                     {
                         GrabFrame();
                     }
@@ -108,29 +124,43 @@ namespace Wanderer.Software.ImageProcessing
                 }
                 catch (Exception ex)
                 {
+                    Console.WriteLine($"Starting D435 - Failed - {ex.Message}");
                     Started = false;
                     State = DeviceStateEnu.Failed;
                 }
+                Console.WriteLine($"Starting D435 - Pipeline started - starting frame capture loop");
+                timer = new Timer(new TimerCallback(TimerElapsed), null, 0, 100);
             }
         }
-
-        public Tuple<VideoFrame, DepthFrame> GrabFrame()
+        private void TimerElapsed(Object stateInfo)
+        {
+            GrabFrame();
+        }
+        private void GrabFrame()
         {
             try
             {
                 if (Pipeline != null)
                 {
-                    var frames = Pipeline.WaitForFrames();
-                    AutoGrabFrameTime = DateTime.Now;
-                    ColorFrame = frames.ColorFrame;
-                    DepthFrame = frames.DepthFrame;
-                    return new Tuple<VideoFrame, DepthFrame>(ColorFrame, DepthFrame);
+                    using (var frames = Pipeline.WaitForFrames())
+                    {
+                        AutoGrabFrameTime = DateTime.Now;
+                        //lock (this)
+                        {
+                            ColorFrame = frames.ColorFrame;
+                            DepthFrame = frames.DepthFrame;
+                            FrameNo++;
+                            Console.WriteLine($"D435 frame captured: {FrameNo}");
+                        }
+                        //return new Tuple<VideoFrame, DepthFrame>(ColorFrame, DepthFrame);
+                    }
                 }
-                return new Tuple<VideoFrame, DepthFrame>(null, null);
+                //return new Tuple<VideoFrame, DepthFrame>(null, null);
             }
             catch (Exception ex)
             {
-                return new Tuple<VideoFrame, DepthFrame>(null, null);
+                Console.WriteLine($"Error: {ex.Message}");
+                //return new Tuple<VideoFrame, DepthFrame>(null, null);
             }
         }
 

@@ -20,11 +20,11 @@ namespace Control.Motor.ServoMotor
 
         ~ServoMotorControllerCls()
         {
-            Disconnect();
+            Disconnect();       
         }
 
         public bool Connect()
-        {
+        { 
             TryToReconnect();
             //UpdateTimer.Start();
 

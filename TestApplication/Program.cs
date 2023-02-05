@@ -16,17 +16,20 @@ namespace Wanderer.Software.TestApplication
             //Keyboard keyboard = new Keyboard();
             //Mouse mouse = new Mouse();
             RealSense realSense = new RealSense();
-            realSense.Start();
             Map map = new Map(10, 10, 0.1f);
             var entities = Entity.Entities;
             var devices = Wanderer.Hardware.Device.Devices;
             var modules = Module.Modules;
-            foreach ( var entity in entities )
+            foreach (var entity in entities)
             {
                 Console.WriteLine(entity);
             }
-            RobotApiServer robotApiServer = new RobotApiServer() ;
-            robotApiServer.Start();
+            RobotApiServer robotApiServer = new RobotApiServer();
+            //realSense.Start();
+            realSense.T264.Start();
+            realSense.T264.GrabFrame();
+            robotApiServer.Start(realSense.D435);
+
         }
     }
 }

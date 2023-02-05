@@ -15,6 +15,8 @@ using SixLabors.ImageSharp.Processing;
 using Image = SixLabors.ImageSharp.Image;
 using System.Drawing.Imaging;
 using Wanderer.Hardware;
+using System;
+using Microsoft.Extensions.FileSystemGlobbing.Internal;
 
 namespace Wanderer.Software.Api
 {
@@ -57,7 +59,8 @@ namespace Wanderer.Software.Api
             State = ModuleStateEnu.Started;
             app.Run($"http://localhost:{Port}");
         }
-        public void Start()
+       
+        public void Start(D435 d435)
         {
             string[] args = null;
             var builder = WebApplication.CreateBuilder(args);
@@ -96,7 +99,7 @@ namespace Wanderer.Software.Api
             State = ModuleStateEnu.Started;
             app.Run(Address);
         }
-
+        
         private void SpeechApiEndpoint(WebApplication app)
         {
             app.MapGet("/speak/{text}", (HttpContext httpContext, string text) =>
@@ -146,57 +149,73 @@ namespace Wanderer.Software.Api
             image.Mutate(x => x.Resize(width, height));
             await image.SaveAsync(stream, JpegFormat.Instance, cancellationToken: token);
         }
-
-        private void ModulesWithIdApiEndpoint(WebApplication app)
+        private Service NewService(WebApplication app, string pattern, Func<HttpContext, string, object[]> func)
         {
-            app.MapGet("/modules/{id}", (HttpContext httpContext, string id) =>
+            app.MapGet(pattern, func);
+            return AddService(new Service(pattern));
+        }
+        private Service NewService(WebApplication app, string pattern, Func<HttpContext, object[]> func)
+        {
+            app.MapGet(pattern, func);
+            return AddService(new Service(pattern));
+        }
+
+        private Service NewService(WebApplication app, string pattern, Func<IResult> func)
+        {
+            app.MapGet(pattern, func);
+            return AddService(new Service(pattern));
+        }
+
+        private Service ModulesWithIdApiEndpoint(WebApplication app)
+        {
+            return NewService(app, "/modules/{id}", (HttpContext httpContext, string id) =>
             {
                 return Wanderer.Software.Module.Modules.Where(module => module.ModuleNo.ToString() == id).ToArray();
             });
         }
 
-        private void DevicesWithIdApiEndpoint(WebApplication app)
+        private Service DevicesWithIdApiEndpoint(WebApplication app)
         {
-            app.MapGet("/devices/{id}", (HttpContext httpContext, string id) =>
+            return NewService(app, "/devices/{id}", (HttpContext httpContext, string id) =>
             {
                 return Wanderer.Hardware.Device.Devices.Where(device => device.DeviceNo.ToString() == id).ToArray();
             });
         }
 
-        private void EntitiesWithIdApiEndpoint(WebApplication app)
+        private Service EntitiesWithIdApiEndpoint(WebApplication app)
         {
-            app.MapGet("/entities/{id}", (HttpContext httpContext, string id) =>
+            return NewService(app, "/entities/{id}", (HttpContext httpContext, string id) =>
             {
                 return Wanderer.Software.Entity.Entities.Where(entity => entity.EntityNo.ToString() == id).ToArray();
             });
         }
-        private void ModulesApiEndpoint(WebApplication app)
+        private Service ModulesApiEndpoint(WebApplication app)
         {
-            app.MapGet("/modules", (HttpContext httpContext) =>
+            return NewService(app, "/modules", (HttpContext httpContext) =>
             {
                 return Wanderer.Software.Module.Modules.Select(module => module).ToArray();
             });
         }
 
-        private void DevicesApiEndpoint(WebApplication app)
+        private Service DevicesApiEndpoint(WebApplication app)
         {
-            app.MapGet("/devices", (HttpContext httpContext) =>
+            return NewService(app, "/devices", (HttpContext httpContext) =>
             {
                 return Wanderer.Hardware.Device.Devices.Select(device => device).ToArray();
             });
         }
 
-        private void EntitiesApiEndpoint(WebApplication app)
+        private Service EntitiesApiEndpoint(WebApplication app)
         {
-            app.MapGet("/entities", (HttpContext httpContext) => 
+            return NewService(app, "/entities", (HttpContext httpContext) => 
             {
                 return Wanderer.Software.Entity.Entities.Select(entity => entity).ToArray();
             });
         }
 
-        private void RobotApiEndpoint(WebApplication app)
+        private Service RobotApiEndpoint(WebApplication app)
         {
-            app.MapGet("/robot", () => Results.Extensions.Html(@$"<!doctype html>
+            return NewService(app, "/robot", () => Results.Extensions.Html(@$"<!doctype html>
             <html>
                 <head><title>Robot at {Address}</title></head>
                 <body>
@@ -214,8 +233,7 @@ namespace Wanderer.Software.Api
             </body>
             </html>"));
         }
-
-        private object CreateContentCameras()
+        private string CreateContentCameras()
         {
             return $@"<div class=""split left"">
               <div class=""centered"">

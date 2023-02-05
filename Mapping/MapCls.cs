@@ -13,7 +13,6 @@ namespace Wanderer.Software.Mapping
         public float YMeters { get; private set; }
         public float ScaleBoxesPerMeter { get; private set; }
         public float DrawingScalePixelsPerMeter { get; set; } = 100.0f;
-        
         public Pen Pen { get; set; } = new Pen(Color.Black, 0.1f);
         public Brush Brush { get; set; } = new SolidBrush(Color.Azure);
         public float CenterX { get; private set; }
@@ -28,7 +27,6 @@ namespace Wanderer.Software.Mapping
             Draw(Graphics.FromImage(bitmap));
             return bitmap;
         }     
-
         public MapCls(float xMeters, float yMeters, float scaleBoxesPerMeter)
         {            
             XMeters = xMeters;
@@ -61,7 +59,7 @@ namespace Wanderer.Software.Mapping
         public void Draw(Graphics graphic)
         {
             CenterX = XMeters / 2.0f;
-            CenterY = XMeters / 10.0f;
+            CenterY = XMeters / 2.0f;
             float locationXCentered = LocationX + CenterX;
             float locationYCentered = LocationY + CenterY;
             for (int indexX = 0; indexX < XBoxes; indexX++)

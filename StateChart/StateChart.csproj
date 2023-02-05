@@ -5,6 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <RootNamespace>Wanderer.Software.StateChart</RootNamespace>
+    <Platforms>x64</Platforms>
   </PropertyGroup>
 
 </Project>

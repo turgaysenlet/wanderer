@@ -80,10 +80,16 @@ namespace Wanderer.Software.ImageProcessing
         {
             // Collect GC or otherwise WaitForFrames gets stuck after 16 frames.
             GC.Collect();
-            var frames = Pipeline.WaitForFrames();
-            PoseFrame = frames.PoseFrame;
-            FrameNo++;
-            Console.WriteLine($"D435 frame captured: {FrameNo} - [{PoseFrame.PoseData.translation.x},{PoseFrame.PoseData.translation.y},{PoseFrame.PoseData.translation.z}]");
+            try
+            {
+                var frames = Pipeline.WaitForFrames();
+                PoseFrame = frames.PoseFrame;
+                FrameNo++;
+                Console.WriteLine($"T264 frame captured: {FrameNo} - [{PoseFrame.PoseData.translation.x},{PoseFrame.PoseData.translation.y},{PoseFrame.PoseData.translation.z}]");
+            } catch (Exception ex)
+            {
+                Console.WriteLine($"T264 frame capture failed: {FrameNo} - {ex.Message}");
+            }
         }
         public double[] Position()
         {
@@ -91,7 +97,7 @@ namespace Wanderer.Software.ImageProcessing
         }
         public double[] OrientationDegrees()
         {
-            return QuaternionToEulerDegrees(new double[] { PoseFrame.PoseData.rotation.x, PoseFrame.PoseData.translation.y, PoseFrame.PoseData.translation.z });
+            return QuaternionToEulerDegrees(new double[] { PoseFrame.PoseData.rotation.x, PoseFrame.PoseData.rotation.y, PoseFrame.PoseData.rotation.z, PoseFrame.PoseData.rotation.w});
         }
         public double[] PosePositionOrientationDegrees()
         {

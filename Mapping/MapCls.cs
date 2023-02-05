@@ -11,27 +11,38 @@ namespace Wanderer.Software.Mapping
         public int YBoxes { get; private set; }
         public float XMeters { get; private set; }
         public float YMeters { get; private set; }
-        public float Scale { get; private set; }
+        public float ScaleBoxesPerMeter { get; private set; }
+        public float DrawingScalePixelsPerMeter { get; set; } = 100.0f;
+        
         public Pen Pen { get; set; } = new Pen(Color.Black, 0.1f);
         public Brush Brush { get; set; } = new SolidBrush(Color.Azure);
         public float CenterX { get; private set; }
         public float CenterY { get; private set; }
         public float ZScale { get; set; } = 0.002f;
+        public float LocationX { get; set; }
+        public float LocationY { get; set; }
+        public Font font = new Font("Arial", 32);
+        public Bitmap GenerateBitmap(int width, int height)
+        {
+            Bitmap bitmap = new Bitmap(width, height);
+            Draw(Graphics.FromImage(bitmap));
+            return bitmap;
+        }     
 
-        public MapCls(float xMeters, float yMeters, float scale)
+        public MapCls(float xMeters, float yMeters, float scaleBoxesPerMeter)
         {            
             XMeters = xMeters;
             YMeters = yMeters;
-            Scale = scale;
-            XBoxes = (int)(xMeters / scale);
-            YBoxes = (int)(yMeters / scale);
+            ScaleBoxesPerMeter = scaleBoxesPerMeter;
+            XBoxes = (int)(xMeters / scaleBoxesPerMeter);
+            YBoxes = (int)(yMeters / scaleBoxesPerMeter);
             Name = $"Map {XMeters}m x {YMeters}m";
             InitMap();
         }
 
         private void InitMap()
         {
-            float[,] noise = Noise.Calc2D(XBoxes, YBoxes, Scale);
+            float[,] noise = Noise.Calc2D(XBoxes, YBoxes, ScaleBoxesPerMeter);
             MapData = new MapPointCls[XBoxes, YBoxes];
             for (int i = 0; i < XBoxes; i++)
             {
@@ -39,42 +50,53 @@ namespace Wanderer.Software.Mapping
                 {
                     int n = (int)(noise[i, j]);
                     MapData[i, j] = new MapPointCls();
-                    MapData[i, j].X = i * Scale;
-                    MapData[i, j].Y = j * Scale;
+                    MapData[i, j].X = i * ScaleBoxesPerMeter;
+                    MapData[i, j].Y = j * ScaleBoxesPerMeter;
                     MapData[i, j].Height = noise[i, j];
-                    if (i == 5)
-                    {
-                        MapData[i, j].Color = Color.Red;
-                    }
-                    else
-                    {
-                        if (j == 5)
-                        {
-                            MapData[i, j].Color = Color.Green;
-                        }
-                        else
-                        {
-                            MapData[i, j].Color = Color.FromArgb(n, n, n);
-                        }
-                    }
+                    MapData[i, j].Color = Color.FromArgb(n, n, n);
                 }
             }
         }
 
         public void Draw(Graphics graphic)
         {
-            for (int i = 0; i < XBoxes; i++)
+            CenterX = XMeters / 2.0f;
+            CenterY = XMeters / 10.0f;
+            float locationXCentered = LocationX + CenterX;
+            float locationYCentered = LocationY + CenterY;
+            for (int indexX = 0; indexX < XBoxes; indexX++)
             {
-                for (int j = 0; j < YBoxes; j++)
+                for (int indexY = 0; indexY < YBoxes; indexY++)
                 {
-                    float x = MapData[i, j].X * 100;
-                    float y = MapData[i, j].Y * 100;
+                    float meterX = MapData[indexX, indexY].X;
+                    float meterY = MapData[indexX, indexY].Y;
+                    float pixelX = meterX * DrawingScalePixelsPerMeter;
+                    float pixelY = meterY * DrawingScalePixelsPerMeter;
                     float w = 10f;
                     float h = 10f;
-                    graphic.FillRectangle(new SolidBrush(MapData[i, j].Color), new RectangleF(x, graphic.ClipBounds.Height - y, w, h));
-                    graphic.DrawRectangle(Pen, x, graphic.ClipBounds.Height - y, w, h);
+                    var color = MapData[indexX, indexY].Color;
+                    if (InsideTheBox(0, 0, meterX, meterY))
+                    {
+                        color = Color.Green;
+                    }
+                    if (InsideTheBox(LocationX, LocationY, meterX, meterY))
+                    {
+                        color = Color.Red;
+                    }
+                    graphic.FillRectangle(new SolidBrush(color), new RectangleF(pixelX, graphic.VisibleClipBounds.Height - pixelY, w, h));
+                    //graphic.FillRectangle(new SolidBrush(Color.Red), new RectangleF(x, graphic.VisibleClipBounds.Height - y, w, h));
+                    graphic.DrawRectangle(Pen, pixelX, graphic.VisibleClipBounds.Height - pixelY, w, h);
                 }
             }
+            graphic.DrawString($"{LocationX.ToString("0.00")},{LocationY.ToString("0.00")}m", font, new SolidBrush(Color.Red),
+                new Point((int)(locationXCentered * DrawingScalePixelsPerMeter), (int)(graphic.VisibleClipBounds.Height - locationYCentered * DrawingScalePixelsPerMeter)));
+        }
+
+        private bool InsideTheBox(float testX, float testY, float x, float y)
+        {
+            testX += CenterX;
+            testY += CenterY;
+            return testX >= (x - 1 * ScaleBoxesPerMeter) && testX < (x + 2 * ScaleBoxesPerMeter) && testY >= (y - 1 * ScaleBoxesPerMeter) && testY < (y + 1* ScaleBoxesPerMeter);
         }
 
         public void PrepareGlArrays(out float[] arrayPosition, out float[] arrayColor)

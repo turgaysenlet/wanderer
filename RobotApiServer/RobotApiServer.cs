@@ -7,7 +7,6 @@ using System.Drawing;
 using System.Net;
 using System.Net.Mime;
 using System.Text;
-using Wanderer.Software;
 using Wanderer.Software.ImageProcessing;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Jpeg;
@@ -15,9 +14,8 @@ using SixLabors.ImageSharp.Processing;
 using Image = SixLabors.ImageSharp.Image;
 using System.Drawing.Imaging;
 using Wanderer.Hardware;
-using System;
-using Microsoft.Extensions.FileSystemGlobbing.Internal;
 using System.Net.Sockets;
+using Wanderer.Software.Mapping;
 
 namespace Wanderer.Software.Api
 {
@@ -96,9 +94,9 @@ namespace Wanderer.Software.Api
             DevicesWithIdApiEndpoint(app);
             ModulesApiEndpoint(app);
             ModulesWithIdApiEndpoint(app);
-
             CameraViewEndpoint(app);
             CameraDistanceEndpoint(app);
+            MapViewEndpoint(app);
             SpeechApiEndpoint(app);
             Address = $"http://{GetIpAddress().ToString()}:{Port}";
             this.Name = $"{GetType().Name} on {Address}";
@@ -106,7 +104,27 @@ namespace Wanderer.Software.Api
             State = ModuleStateEnu.Started;
             app.Run(Address);
         }
-        
+
+        private void MapViewEndpoint(WebApplication app)
+        {
+            app.MapGet("/maps/{id}", (HttpContext httpContext, string id) =>
+            {
+                MapCls map = ((MapCls)Wanderer.Software.EntityCls.Entities.Where(module => module.GetType() == typeof(MapCls)).FirstOrDefault());
+                T264 t264 = ((T264)Wanderer.Hardware.Device.Devices.Where(device => device.GetType() == typeof(T264)).FirstOrDefault());
+                if (t264 != null) {
+                    var pose = t264.PosePositionOrientationDegrees();
+                    map.LocationX = (float)pose[0];
+                    map.LocationX = (float)pose[1];
+                }
+                Bitmap image = map.GenerateBitmap(1000, 1000);
+                httpContext.Response.Headers.CacheControl = $"public,max-age={TimeSpan.FromSeconds(1).TotalSeconds}";
+                MemoryStream stream = new MemoryStream();
+                image.Save(stream, ImageFormat.Jpeg);
+                stream.Position = 0;
+                return Results.Stream(stream, "image/jpeg");
+            });
+        }
+
         private void SpeechApiEndpoint(WebApplication app)
         {
             app.MapGet("/speak/{text}", (HttpContext httpContext, string text) =>
@@ -236,8 +254,10 @@ namespace Wanderer.Software.Api
                     <h2>Modules</h2>
                     {CreateContentModules()}
                     <h2>Cameras</h2>
-                    {CreateContentCamera(0, 400, 300, 100)}
-                    {CreateContentCamera(1, 400, 300, 100)}
+                    {CreateContentCamera(0, 320, 240, 100)}
+                    {CreateContentCamera(1, 320, 240, 100)}
+                    {CreateContentMap(2, 240, 240, 1000)}
+
             </body>
             </html>"));
         }
@@ -256,8 +276,14 @@ namespace Wanderer.Software.Api
             //    <img src=""/cameras/01"" alt=""Depth camera"">
             //  </div>
             //</div>";
-            return $@"<img src=""/cameras/{cameraNo}"" id=""reloader{cameraNo}"" onLoad=""setTimeout( () => 
-            {{ document.getElementById('reloader{cameraNo}').src='/cameras/{cameraNo}' + '?' + new Date().getMilliseconds() }},{refreshMs})"" width=""{width}"" height=""{width}""/>";
+            return $@"<img src=""/cameras/{cameraNo}"" id=""reloader{cameraNo}"" alt=""Camera{cameraNo}"" onLoad=""setTimeout( () => 
+            {{ document.getElementById('reloader{cameraNo}').src='/cameras/{cameraNo}' + '?' + new Date().getMilliseconds() }},{refreshMs})"" width=""{width}"" height=""{height}""/>";
+        }
+
+        private string CreateContentMap(int idNo, int width, int height, int refreshMs)
+        {
+            return $@"<img src=""/maps/{idNo}"" id=""reloader{idNo}"" alt=""Map{idNo}"" onLoad=""setTimeout( () => 
+            {{ document.getElementById('reloader{idNo}').src='/maps/{idNo}' + '?' + new Date().getMilliseconds() }},{refreshMs})"" width=""{width}"" height=""{height}""/>";
         }
 
         public ContentResult GetHtml()

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -66,7 +67,7 @@ namespace Wanderer.Software.ImageProcessing
                 {
                     Started = false;
                     State = DeviceStateEnu.Failed;
-                    Console.WriteLine($"Starting T264 - Failed - {ex.Message}");                    
+                    Console.WriteLine($"Starting T264 - Failed - {ex.Message}");
                 }
                 timer = new Timer(new TimerCallback(TimerElapsed), null, 0, 100);
             }
@@ -83,6 +84,43 @@ namespace Wanderer.Software.ImageProcessing
             PoseFrame = frames.PoseFrame;
             FrameNo++;
             Console.WriteLine($"D435 frame captured: {FrameNo} - [{PoseFrame.PoseData.translation.x},{PoseFrame.PoseData.translation.y},{PoseFrame.PoseData.translation.z}]");
+        }
+        public double[] Position()
+        {
+            return new double[] { PoseFrame.PoseData.translation.x, PoseFrame.PoseData.translation.y, PoseFrame.PoseData.translation.z };
+        }
+        public double[] OrientationDegrees()
+        {
+            return QuaternionToEulerDegrees(new double[] { PoseFrame.PoseData.rotation.x, PoseFrame.PoseData.translation.y, PoseFrame.PoseData.translation.z });
+        }
+        public double[] PosePositionOrientationDegrees()
+        {
+            var position = Position();
+            var eulerDegrees = OrientationDegrees();
+            return new double[] { position[0], position[1], position[2], eulerDegrees[0], eulerDegrees[1], eulerDegrees[2] };
+        }
+        public static double[] QuaternionToEulerDegrees(double[] quaternion)
+        {
+            var yaw = RadianToDegree( Math.Atan2(2 * quaternion[1] * quaternion[3] - 2 * quaternion[0] * quaternion[2], 1 - 2 * quaternion[1] * quaternion[1] - 2 * quaternion[2] * quaternion[2]));
+            var pitch = RadianToDegree(Math.Asin(2 * quaternion[0] * quaternion[1] + 2 * quaternion[2] * quaternion[3]));
+            var roll = RadianToDegree(Math.Atan2(2 * quaternion[0] * quaternion[3] - 2 * quaternion[1] * quaternion[2], 1 - 2 * quaternion[0] * quaternion[0] - 2 * quaternion[2] * quaternion[2]));
+            return new double[] { yaw, pitch, roll };
+        }
+        public static double RadianToDegree(double radians)
+        {
+            radians += 2 * Math.PI;
+            radians %= 2 * Math.PI;
+            radians += 2 * Math.PI;
+            radians %= 2 * Math.PI;
+            return (180.0 / Math.PI) * radians;
+        }
+        public static double DegreeToRadian(double degree)
+        {
+            degree += 360.0;
+            degree %= 360.0;
+            degree += 360.0;
+            degree %= 360.0;
+            return (Math.PI / 180.0) * degree;
         }
     }
 }

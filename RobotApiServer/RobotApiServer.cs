@@ -17,6 +17,7 @@ using System.Drawing.Imaging;
 using Wanderer.Hardware;
 using System;
 using Microsoft.Extensions.FileSystemGlobbing.Internal;
+using System.Net.Sockets;
 
 namespace Wanderer.Software.Api
 {
@@ -25,15 +26,20 @@ namespace Wanderer.Software.Api
         public int Port { get; set; } = 5000;
         public string Address
         {
-            get
-            {
-                //return $"http://localhost:{Port}";
-                return $"http://192.168.1.69:{Port}";
-            }
+            get; set;
         }
         public RobotApiServer()
         {
             State = ModuleStateEnu.Created;
+        }
+        public IPAddress GetIpAddress()
+        {
+            string hostName = Dns.GetHostName();
+            Console.WriteLine(hostName);
+            // Get the IP from GetHostByName method of dns class.
+            var ipAddress = Dns.GetHostByName(hostName).AddressList.Where(t => t.AddressFamily == AddressFamily.InterNetwork).First();
+            Console.WriteLine("IP Address is : " + ipAddress);
+            return ipAddress;
         }
         public void StartWithController()
         {
@@ -94,10 +100,11 @@ namespace Wanderer.Software.Api
             CameraViewEndpoint(app);
             CameraDistanceEndpoint(app);
             SpeechApiEndpoint(app);
-
+            Address = $"http://{GetIpAddress().ToString()}:{Port}";
             this.Name = $"{GetType().Name} on {Address}";
+            Console.WriteLine(this.Name);
             State = ModuleStateEnu.Started;
-            app.Run();
+            app.Run(Address);
         }
         
         private void SpeechApiEndpoint(WebApplication app)
@@ -229,11 +236,12 @@ namespace Wanderer.Software.Api
                     <h2>Modules</h2>
                     {CreateContentModules()}
                     <h2>Cameras</h2>
-                    {CreateContentCameras()}
+                    {CreateContentCamera(0, 400, 300, 100)}
+                    {CreateContentCamera(1, 400, 300, 100)}
             </body>
             </html>"));
         }
-        private string CreateContentCameras()
+        private string CreateContentCamera(int cameraNo, int width, int height, int refreshMs)
         {
             //return $@"<div class=""split left"">
             //  <div class=""centered"">
@@ -248,10 +256,8 @@ namespace Wanderer.Software.Api
             //    <img src=""/cameras/01"" alt=""Depth camera"">
             //  </div>
             //</div>";
-            return $@"<img src=""/cameras/0"" id=""reloader0"" onLoad=""setTimeout( () => 
-            {{ document.getElementById('reloader0').src='/cameras/0' + '?' + new Date().getMilliseconds() }},200)"" width=""320"" height=""240""/>
-            <img src=""/cameras/1"" id=""reloader1"" onLoad=""setTimeout( () => 
-            {{ document.getElementById('reloader1').src='/cameras/1' + '?' + new Date().getMilliseconds() }},200)"" width=""320"" height=""240""/>";
+            return $@"<img src=""/cameras/{cameraNo}"" id=""reloader{cameraNo}"" onLoad=""setTimeout( () => 
+            {{ document.getElementById('reloader{cameraNo}').src='/cameras/{cameraNo}' + '?' + new Date().getMilliseconds() }},{refreshMs})"" width=""{width}"" height=""{width}""/>";
         }
 
         public ContentResult GetHtml()

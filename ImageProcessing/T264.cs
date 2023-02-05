@@ -12,7 +12,6 @@ namespace Wanderer.Software.ImageProcessing
     public class T264 : Wanderer.Hardware.Device
     {
         private Timer timer;
-
         public Pipeline Pipeline { get; set; }
         public Context Context { get; set; }
         public Device Device { get; set; }
@@ -21,6 +20,10 @@ namespace Wanderer.Software.ImageProcessing
         public PoseFrame PoseFrame { get; private set; }
         public bool Started { get; private set; }
         public long FrameNo { get; private set; } = 0;
+        public List<Tuple<DateTime, double[]>> Poses = new();
+        // 500ms collection time, 2hours recording, 120*60*2 = 14400 entries.
+        public TimeSpan PoseRecordingPeriod = TimeSpan.FromMilliseconds(500);
+        private DateTime LastPoseRecordingTime = DateTime.Now;
 
         public T264()
         {
@@ -86,14 +89,42 @@ namespace Wanderer.Software.ImageProcessing
                 PoseFrame = frames.PoseFrame;
                 FrameNo++;
                 Console.WriteLine($"T264 frame captured: {FrameNo} - [{PoseFrame.PoseData.translation.x},{PoseFrame.PoseData.translation.y},{PoseFrame.PoseData.translation.z}]");
+                DateTime now = DateTime.Now;
+                if (LastPoseRecordingTime + PoseRecordingPeriod < now)
+                {
+                    LastPoseRecordingTime = now;
+                    AddPose(now, PosePositionOrientationDegrees());
+                }
             } catch (Exception ex)
             {
                 Console.WriteLine($"T264 frame capture failed: {FrameNo} - {ex.Message}");
             }
         }
+
+        private void AddPose(DateTime now, double[] pose)
+        {
+            Poses.Add(new Tuple<DateTime, double[]>(now, pose));
+        }
+
         public double[] Position()
         {
-            return new double[] { PoseFrame.PoseData.translation.x, PoseFrame.PoseData.translation.y, PoseFrame.PoseData.translation.z };
+            /* Original T264 pose coordinate system
+             * 1. Positive X direction is towards right imager
+             * 2. Positive Y direction is upwards toward the top of the device
+             * 3. Positive Z direction is inwards toward the back of the device
+             * The center of tracking corresponds to the center location between the right and left monochrome imagers on the device.
+             */
+
+            /* Robot pose coordinate system
+             * 1. Positive X direction is towards right imager, right of the robot
+             * 2. Positive Y direction is outward toward the front of the device/robot
+             * 3. Positive Z direction is  upwards toward the top of the device/robot
+             * The center of tracking corresponds to the center location between the right and left monochrome imagers on the device.
+             */
+            var x = PoseFrame.PoseData.translation.x;
+            var y = -PoseFrame.PoseData.translation.z;
+            var z = PoseFrame.PoseData.translation.y;
+            return new double[] { x, y, z};
         }
         public double[] OrientationDegrees()
         {

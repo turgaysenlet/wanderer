@@ -35,6 +35,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gps", "Gps\Gps.csproj", "{5
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StateChart", "StateChart\StateChart.csproj", "{3DDC0261-7A33-454D-8CD0-A8BA23DC68BA}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommonTypes", "CommonTypes\CommonTypes.csproj", "{309C7DFD-5DC4-43D9-B40C-AD663B100BA8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -141,6 +143,12 @@ Global
 		{3DDC0261-7A33-454D-8CD0-A8BA23DC68BA}.Release|Any CPU.ActiveCfg = Release|x64
 		{3DDC0261-7A33-454D-8CD0-A8BA23DC68BA}.Release|x64.ActiveCfg = Release|x64
 		{3DDC0261-7A33-454D-8CD0-A8BA23DC68BA}.Release|x64.Build.0 = Release|x64
+		{309C7DFD-5DC4-43D9-B40C-AD663B100BA8}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{309C7DFD-5DC4-43D9-B40C-AD663B100BA8}.Debug|x64.ActiveCfg = Debug|x64
+		{309C7DFD-5DC4-43D9-B40C-AD663B100BA8}.Debug|x64.Build.0 = Debug|x64
+		{309C7DFD-5DC4-43D9-B40C-AD663B100BA8}.Release|Any CPU.ActiveCfg = Release|x64
+		{309C7DFD-5DC4-43D9-B40C-AD663B100BA8}.Release|x64.ActiveCfg = Release|x64
+		{309C7DFD-5DC4-43D9-B40C-AD663B100BA8}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -159,6 +167,7 @@ Global
 		{6936C71E-27DF-4C99-8DF1-FA67E9BF1ACD} = {051D4F37-3A52-4BBB-A467-8528B11080B4}
 		{508F200B-F561-4A3C-AD66-DDADC6208BD6} = {5564D175-B3FA-451F-9745-6299732B0F1E}
 		{3DDC0261-7A33-454D-8CD0-A8BA23DC68BA} = {051D4F37-3A52-4BBB-A467-8528B11080B4}
+		{309C7DFD-5DC4-43D9-B40C-AD663B100BA8} = {051D4F37-3A52-4BBB-A467-8528B11080B4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C5DA3201-DD20-475F-8842-CDC490CE3CC1}

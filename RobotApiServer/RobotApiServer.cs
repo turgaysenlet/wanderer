@@ -88,6 +88,7 @@ namespace Wanderer.Software.Api
             app.UseAuthorization();
 
             RobotApiEndpoint(app);
+            MapApiEndpoint(app);
             EntitiesApiEndpoint(app);
             EntitiesWithIdApiEndpoint(app);
             DevicesApiEndpoint(app);
@@ -112,9 +113,19 @@ namespace Wanderer.Software.Api
                 MapCls map = ((MapCls)Wanderer.Software.EntityCls.Entities.Where(module => module.GetType() == typeof(MapCls)).FirstOrDefault());
                 T264 t264 = ((T264)Wanderer.Hardware.Device.Devices.Where(device => device.GetType() == typeof(T264)).FirstOrDefault());
                 if (t264 != null) {
+                    map.Poses = t264.Poses;
                     var pose = t264.PosePositionOrientationDegrees();
                     map.LocationX = (float)pose[0];
                     map.LocationY = (float)pose[1];
+                }
+                D435 d435 = ((D435)Wanderer.Hardware.Device.Devices.Where(device => device.GetType() == typeof(D435)).FirstOrDefault());
+                if (d435 != null)
+                {
+                    var color = Console.ForegroundColor;
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("CalculateOccupancyMap");
+                    Console.ForegroundColor = color;
+                    map.CalculateOccupancyMap(d435.Vertices);
                 }
                 Bitmap image = map.GenerateBitmap(1000, 1000);
                 httpContext.Response.Headers.CacheControl = $"public,max-age={TimeSpan.FromSeconds(1).TotalSeconds}";
@@ -257,6 +268,20 @@ namespace Wanderer.Software.Api
                     {CreateContentCamera(0, 320, 240, 100)}
                     {CreateContentCamera(1, 320, 240, 100)}
                     {CreateContentMap(2, 240, 240, 1000)}
+
+            </body>
+            </html>"));
+        }
+        private Service MapApiEndpoint(WebApplication app)
+        {
+            return NewService(app, "/map", () => Results.Extensions.Html(@$"<!doctype html>
+            <html>
+                <head><title>Robot at {Address}</title></head>
+                <body>                    
+                    <h1>Map</h1>
+                    {CreateContentMap(2, 1200, 1200, 1000)}
+                    {CreateContentCamera(0, 640, 480, 300)}
+                    {CreateContentCamera(1, 640, 480, 300)}
 
             </body>
             </html>"));

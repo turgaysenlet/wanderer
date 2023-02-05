@@ -20,7 +20,7 @@ using Microsoft.Extensions.FileSystemGlobbing.Internal;
 
 namespace Wanderer.Software.Api
 {
-    public class RobotApiServer : ApiServer
+    public class RobotApiServer : ApiServerCls
     {
         public int Port { get; set; } = 5000;
         public string Address
@@ -104,7 +104,7 @@ namespace Wanderer.Software.Api
         {
             app.MapGet("/speak/{text}", (HttpContext httpContext, string text) =>
             {
-                Wanderer.Software.Speech.SpeechSynthesisServer.Instance.Speak(text);
+                Wanderer.Software.Speech.SpeechSynthesisServerCls.Instance.Speak(text);
                 return text;// Results.Text(text);
             });
         }
@@ -170,7 +170,7 @@ namespace Wanderer.Software.Api
         {
             return NewService(app, "/modules/{id}", (HttpContext httpContext, string id) =>
             {
-                return Wanderer.Software.Module.Modules.Where(module => module.ModuleNo.ToString() == id).ToArray();
+                return Wanderer.Software.ModuleCls.Modules.Where(module => module.ModuleNo.ToString() == id).ToArray();
             });
         }
 
@@ -186,14 +186,14 @@ namespace Wanderer.Software.Api
         {
             return NewService(app, "/entities/{id}", (HttpContext httpContext, string id) =>
             {
-                return Wanderer.Software.Entity.Entities.Where(entity => entity.EntityNo.ToString() == id).ToArray();
+                return Wanderer.Software.EntityCls.Entities.Where(entity => entity.EntityNo.ToString() == id).ToArray();
             });
         }
         private Service ModulesApiEndpoint(WebApplication app)
         {
             return NewService(app, "/modules", (HttpContext httpContext) =>
             {
-                return Wanderer.Software.Module.Modules.Select(module => module).ToArray();
+                return Wanderer.Software.ModuleCls.Modules.Select(module => module).ToArray();
             });
         }
 
@@ -209,7 +209,7 @@ namespace Wanderer.Software.Api
         {
             return NewService(app, "/entities", (HttpContext httpContext) => 
             {
-                return Wanderer.Software.Entity.Entities.Select(entity => entity).ToArray();
+                return Wanderer.Software.EntityCls.Entities.Select(entity => entity).ToArray();
             });
         }
 
@@ -271,7 +271,7 @@ namespace Wanderer.Software.Api
                     <td> <b>Type <b/></td>
                 </b>
              </tr>";
-            var entities = Entity.Entities;
+            var entities = EntityCls.Entities;
             foreach (var entity in entities)
             {
                 htmlStr += "<tr><td>" +entity.EntityNo + "</td><td>" + entity.Name + "</td><td>" + entity.GetType().Name + "</td></tr>";
@@ -329,7 +329,7 @@ namespace Wanderer.Software.Api
                     <td><b> Name <b/></td>            
                     <td><b> State<b/> </td>                        
              </tr>";
-            var modules = Wanderer.Software.Module.Modules;
+            var modules = Wanderer.Software.ModuleCls.Modules;
             foreach (var module in modules)
             {
                 htmlStr += "<tr><td>" + module.ModuleNo + "</td><td>" + module.Name + "</td><td>" + module.State + "</td></tr>";

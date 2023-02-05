@@ -2,7 +2,7 @@
 
 namespace Wanderer.Hardware
 {
-    public abstract class Device : Entity
+    public abstract class Device : EntityCls
     {
         public static List<Device> Devices { get; } = new List<Device>();
         public static int DeviceCount { get; private set; } = 0;

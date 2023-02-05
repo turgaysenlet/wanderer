@@ -9,12 +9,12 @@ using System.Xml.Linq;
 
 namespace Wanderer.Software
 {
-    public class Entity
+    public class EntityCls
     {
-        public static List<Entity> Entities { get; } = new List<Entity>();
+        public static List<EntityCls> Entities { get; } = new List<EntityCls>();
         public static int EntityCount { get; private set; } = 0;
         public int EntityNo { get; private set; } = 0;
-        private static Entity AddEntity(Entity entity)
+        private static EntityCls AddEntity(EntityCls entity)
         {
             if (entity != null)
             {
@@ -23,7 +23,7 @@ namespace Wanderer.Software
             }
             return entity;
         }
-       ~Entity()
+       ~EntityCls()
         {
             Entities.Remove(this);
         }
@@ -33,14 +33,14 @@ namespace Wanderer.Software
             get { return name; }
             protected set { name = value; }
         }
-        public Entity()
+        public EntityCls()
         {
             AddEntity(this);
             Name = $"Unknown {this.GetType().Name}";
         }
         public override string ToString()
         {
-            if (GetType() == typeof(Entity))
+            if (GetType() == typeof(EntityCls))
             {
                 return $"{this.GetType().Name} - {Name} - Entity {EntityNo}";
             }

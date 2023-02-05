@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Wanderer.Software
 {
-    public class ApiServer : Module
+    public class ApiServerCls : ModuleCls
     {
         public List<Service> Services { get; } = new List<Service>();
         protected Service AddService(Service service)

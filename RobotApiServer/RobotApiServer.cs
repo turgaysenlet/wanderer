@@ -16,6 +16,7 @@ using System.Drawing.Imaging;
 using Wanderer.Hardware;
 using System.Net.Sockets;
 using Wanderer.Software.Mapping;
+using static Emgu.CV.Fuzzy.FuzzyInvoke;
 
 namespace Wanderer.Software.Api
 {
@@ -89,6 +90,7 @@ namespace Wanderer.Software.Api
 
             RobotApiEndpoint(app);
             MapApiEndpoint(app);
+            KaanApiEndpoint(app);
             EntitiesApiEndpoint(app);
             EntitiesWithIdApiEndpoint(app);
             DevicesApiEndpoint(app);
@@ -272,6 +274,57 @@ namespace Wanderer.Software.Api
             </body>
             </html>"));
         }
+        private Service KaanApiEndpoint(WebApplication app)
+        {
+            return NewService(app, "/kaan", () => Results.Extensions.Html(@$"<!doctype html>
+            <html>
+                <head><title>Robot at {Address}</title></head>
+                <body style=""background-color:rgb(21,32,43);"">
+                    {CreateStyle()}
+                    {CreateContentMap(2, 200, 200, 1000)}
+                    {CreateContentCamera(0, 280, 200, 300)}
+                    {CreateContentCamera(1, 280, 200, 300)}
+                    {CreateRestGetButton("Hello", "/speak/Hello")}                
+                    {CreateRestGetButton("Kaan", "/speak/Kaan")}
+            </body>
+            </html>"));
+        }
+
+        private object CreateStyle()
+        {
+            return @"<style>
+                .button {
+                  background-color: #4CAF50; /* Green */
+                  border: none;
+                  color: white;
+                  padding: 15px 32px;
+                  text-align: center;
+                  text-decoration: none;
+                  display: inline-block;
+                  margin: 4px 2px;
+                  cursor: pointer;
+                }
+
+                .button1 {font-size: 10px;}
+                .button2 {font-size: 12px;}
+                .button3 {font-size: 16px;}
+                .button4 {font-size: 20px;width: 48%;}
+                .button5 {font-size: 24px;}
+                </style>";
+        }
+
+        private string CreateRestGetButton(string text, string url)
+        {
+            var functionName = text.Replace(" ", "");
+            return $@"
+                <button id='{functionName}'type='button' class=""button button4"" onclick=""function{functionName}()"">{text}</button>
+                <script>
+                async function function{functionName}() {{
+                  const abc = await fetch('{url}');
+                }}
+                </script>";
+        }
+
         private Service MapApiEndpoint(WebApplication app)
         {
             return NewService(app, "/map", () => Results.Extensions.Html(@$"<!doctype html>
@@ -282,7 +335,6 @@ namespace Wanderer.Software.Api
                     {CreateContentMap(2, 1200, 1200, 1000)}
                     {CreateContentCamera(0, 640, 480, 300)}
                     {CreateContentCamera(1, 640, 480, 300)}
-
             </body>
             </html>"));
         }

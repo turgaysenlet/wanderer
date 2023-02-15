@@ -39,6 +39,10 @@ namespace Wanderer.Software.ImageProcessing
             get
             {
                 AutoGrab();
+                if (ColorFrame == null)
+                {
+                    return new Bitmap(320, 240);
+                }
                 return new Bitmap(ColorFrame.Width, ColorFrame.Height, ColorFrame.Stride, System.Drawing.Imaging.PixelFormat.Format24bppRgb, ColorFrame.Data);
             }
         }
@@ -64,14 +68,18 @@ namespace Wanderer.Software.ImageProcessing
                 try
                 {
                     AutoGrab();
-                    if (colorizer != null)
+                    if (colorizer != null && DepthFrame != null)
                     {
                         VideoFrame depthColorFrame = colorizer.Process<VideoFrame>(DepthFrame);
                         return new Bitmap(depthColorFrame.Width, depthColorFrame.Height, depthColorFrame.Stride, System.Drawing.Imaging.PixelFormat.Format24bppRgb, depthColorFrame.Data);
-                    }
+                    }                    
                 }
                 catch
                 {
+                }
+                if (DepthFrame == null)
+                {
+                    return new Bitmap(320, 240);
                 }
                 return new Bitmap(DepthFrame.Width, DepthFrame.Height);
             }

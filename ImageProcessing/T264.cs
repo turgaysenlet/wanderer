@@ -108,6 +108,10 @@ namespace Wanderer.Software.ImageProcessing
 
         public double[] Position()
         {
+            if (PoseFrame == null || PoseFrame.PoseData == null)
+            {
+                return new double[] { 0, 0, 0 };
+            }
             /* Original T264 pose coordinate system
              * 1. Positive X direction is towards right imager
              * 2. Positive Y direction is upwards toward the top of the device
@@ -128,6 +132,10 @@ namespace Wanderer.Software.ImageProcessing
         }
         public double[] OrientationDegrees()
         {
+            if (PoseFrame == null || PoseFrame.PoseData == null)
+            {
+                return new double[] { 0, 0, 0, 0};
+            }
             return QuaternionToEulerDegrees(new double[] { PoseFrame.PoseData.rotation.x, PoseFrame.PoseData.rotation.y, PoseFrame.PoseData.rotation.z, PoseFrame.PoseData.rotation.w});
         }
         public double[] PosePositionOrientationDegrees()

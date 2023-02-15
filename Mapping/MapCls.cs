@@ -103,7 +103,10 @@ namespace Wanderer.Software.Mapping
                 //    graphic.FillRectangle(new SolidBrush(Color.Red), new RectangleF(pixelX, pixelY, w, h));
                 //}
                 var points = Poses.Select(pose => new PointF((CenterX + (float)pose.Item2[0]) * DrawingScalePixelsPerMeter, (CenterY + (float)pose.Item2[1]) * DrawingScalePixelsPerMeter)).ToArray();
-                graphic.DrawLines(Pens.Red, points);
+                if (points != null && points.Length > 0)
+                {
+                    graphic.DrawLines(Pens.Red, points);
+                }
                 var p = new Pen(Color.FromArgb(128, Color.Blue), 2);
                 graphic.DrawLine(p,
                     new PointF((CenterX + LocationX) * DrawingScalePixelsPerMeter, (CenterY + LocationY) * DrawingScalePixelsPerMeter),

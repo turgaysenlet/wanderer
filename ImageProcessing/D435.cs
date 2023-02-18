@@ -189,7 +189,7 @@ namespace Wanderer.Software.ImageProcessing
                                 CalculatePointCloud(pc, DepthFrame, ref vertices);
                             }
                             FrameNo++;
-                            Console.WriteLine($"D435 frame captured: {FrameNo}");
+                            // Console.WriteLine($"D435 frame captured: {FrameNo}");
                         }
                     }
                 }

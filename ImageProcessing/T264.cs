@@ -88,7 +88,7 @@ namespace Wanderer.Software.ImageProcessing
                 var frames = Pipeline.WaitForFrames();
                 PoseFrame = frames.PoseFrame;
                 FrameNo++;
-                Console.WriteLine($"T264 frame captured: {FrameNo} - [{PoseFrame.PoseData.translation.x},{PoseFrame.PoseData.translation.y},{PoseFrame.PoseData.translation.z}]");
+                //Console.WriteLine($"T264 frame captured: {FrameNo} - [{PoseFrame.PoseData.translation.x},{PoseFrame.PoseData.translation.y},{PoseFrame.PoseData.translation.z}]");
                 DateTime now = DateTime.Now;
                 if (LastPoseRecordingTime + PoseRecordingPeriod < now)
                 {

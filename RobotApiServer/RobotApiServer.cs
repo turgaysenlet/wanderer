@@ -165,10 +165,10 @@ namespace Wanderer.Software.Api
             app.MapGet("/cameras/{id}", (HttpContext httpContext, string id) =>
             {
                 D435 d435 = ((D435)Wanderer.Hardware.Device.Devices.Where(device => device.GetType() == typeof(D435)).FirstOrDefault());
-                Bitmap image = id == "0" ? d435.ColorBitmap : d435.DepthColorBitmap;
+                Bitmap image = id == "0" ? d435?.ColorBitmap : d435?.DepthColorBitmap;
                 httpContext.Response.Headers.CacheControl = $"public,max-age={TimeSpan.FromSeconds(1).TotalSeconds}";
                 MemoryStream stream = new MemoryStream();
-                image.Save(stream, ImageFormat.Jpeg);
+                image?.Save(stream, ImageFormat.Jpeg);
                 stream.Position = 0;
                 return Results.Stream(stream, "image/jpeg");
             });

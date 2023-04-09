@@ -15,8 +15,8 @@ namespace Wanderer.Software.TestApplication
             InputManager inputManager = new InputManager();
             //Keyboard keyboard = new Keyboard();
             //Mouse mouse = new Mouse();
-            RealSense realSense = new RealSense();
-            realSense.Start();
+            //RealSense realSense = new RealSense();
+            //realSense.Start();
             MapCls map = new MapCls(10, 10, 0.1f);
             var entities = EntityCls.Entities;
             var devices = Wanderer.Hardware.Device.Devices;

@@ -15,6 +15,8 @@
     <PackageReference Include="Emgu.CV.Bitmap" Version="4.6.0.5131" />
     <PackageReference Include="Emgu.CV.runtime.windows" Version="4.6.0.5131" />
     <PackageReference Include="K4AdotNet" Version="1.4.14" />
+    <PackageReference Include="Microsoft.Azure.Kinect.BodyTracking" Version="1.1.2" />
+    <PackageReference Include="Microsoft.Azure.Kinect.Sensor" Version="1.4.1" />
     <PackageReference Include="PclSharp" Version="1.8.1.20180820-beta07" />
   </ItemGroup>
 
@@ -39,7 +41,7 @@
 
   <ItemGroup>
     <Reference Include="Intel.RealSense">
-      <HintPath>..\..\..\Program Files (x86)\Intel RealSense SDK 2.0\bin\x64\Intel.Realsense.dll</HintPath>
+      <HintPath>..\..\..\..\Program Files (x86)\Intel RealSense SDK 2.0\bin\x64\Intel.Realsense.dll</HintPath>
     </Reference>
   </ItemGroup>
 

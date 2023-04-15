@@ -17,6 +17,8 @@ namespace Wanderer.Software.TestApplication
             //Mouse mouse = new Mouse();
             //RealSense realSense = new RealSense();
             //realSense.Start();
+            Kinect kinect = new Kinect();
+            kinect.Start();
             MapCls map = new MapCls(10, 10, 0.1f);
             var entities = EntityCls.Entities;
             var devices = Wanderer.Hardware.Device.Devices;

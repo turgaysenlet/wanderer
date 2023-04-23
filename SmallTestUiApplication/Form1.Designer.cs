@@ -37,25 +37,26 @@
             // timer1
             // 
             timer1.Enabled = true;
-            timer1.Interval = 25;
             timer1.Tick += timer1_Tick;
             // 
             // imageBox1
             // 
             imageBox1.Dock = DockStyle.Fill;
             imageBox1.Location = new Point(0, 0);
+            imageBox1.Margin = new Padding(2);
             imageBox1.Name = "imageBox1";
-            imageBox1.Size = new Size(1231, 968);
+            imageBox1.Size = new Size(862, 581);
             imageBox1.SizeMode = PictureBoxSizeMode.Zoom;
             imageBox1.TabIndex = 2;
             imageBox1.TabStop = false;
             // 
             // Form1
             // 
-            AutoScaleDimensions = new SizeF(10F, 25F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1231, 968);
+            ClientSize = new Size(862, 581);
             Controls.Add(imageBox1);
+            Margin = new Padding(2);
             Name = "Form1";
             Text = "Form1";
             FormClosing += Form1_FormClosing;

@@ -25,9 +25,9 @@ namespace Wanderer.Software.ImageProcessing
             device = Device.Open();
             DeviceConfiguration config = new DeviceConfiguration();
             config.ColorFormat = Microsoft.Azure.Kinect.Sensor.ImageFormat.ColorBGRA32;
-            config.ColorResolution = ColorResolution.R1080p;
-            config.DepthMode = DepthMode.NFOV_Unbinned;
-            config.CameraFPS = FPS.FPS30;
+            config.ColorResolution = ColorResolution.R720p;
+            config.DepthMode = DepthMode.WFOV_2x2Binned;
+            config.CameraFPS = FPS.FPS5;
             config.SynchronizedImagesOnly = true;
             config.WiredSyncMode = WiredSyncMode.Standalone;
             device.StartCameras(config);
@@ -47,16 +47,16 @@ namespace Wanderer.Software.ImageProcessing
         {
             using (Capture capture = device.GetCapture())
             {
-                Image colorImage = capture.Color;
+                //Image colorImage = capture.Color;
                 Image depthImage = capture.Depth;
 
-                int colorWidth = colorImage.WidthPixels;
-                int colorHeight = colorImage.HeightPixels;
-                byte[] colorData = colorImage.Memory.ToArray();
+                //int colorWidth = colorImage.WidthPixels;
+                //int colorHeight = colorImage.HeightPixels;
+                //byte[] colorData = colorImage.Memory.ToArray();
                 byte[] depthData = depthImage.Memory.ToArray();
-                using (Image<Bgra, Byte> colorEmguImage = new Image<Bgra, Byte>((int)colorImage.WidthPixels, (int)colorImage.HeightPixels))
+                //using (Image<Bgra, Byte> colorEmguImage = new Image<Bgra, Byte>((int)colorImage.WidthPixels, (int)colorImage.HeightPixels))
                 {
-                    colorEmguImage.Bytes = colorData;
+                    //colorEmguImage.Bytes = colorData;
                     //colorEmguImage.Save(@"c:\temp\color.png");
                 }
                 using (Image<Gray, Int16> depthEmguImage = new Image<Gray, Int16>((int)depthImage.WidthPixels, (int)depthImage.HeightPixels))
@@ -77,8 +77,8 @@ namespace Wanderer.Software.ImageProcessing
                     XYZMm[] pointCloud = PointCloudImageToPointCloud(pointCloudImage);                    
                     short cameraHeightMillimeter = 150;
                     short sliceHeightMillimeter = (short)(cameraHeightMillimeter / 2);
-                    short mapWidthMillimeter = 4_000;
-                    short mapLengthMillimeter = 4_000;
+                    short mapWidthMillimeter = 1_000;
+                    short mapLengthMillimeter = 1_000;
                     PointCloudToMap(ref map, mapWidthMillimeter, mapLengthMillimeter, pointCloud, sliceHeightMillimeter);
                 }
             }
@@ -86,25 +86,31 @@ namespace Wanderer.Software.ImageProcessing
 
         private void PointCloudToMap(ref Image<Gray, byte> map, short mapWidthMillimeter, short mapLengthMillimeter, XYZMm[] pointCloud, short sliceHeightMillimeter)
         {
-            if (map == null)
+            short bottom = -200;
+            short top = 50;
+            //if (map == null)
             {
                 map = new Image<Gray, byte>(mapWidthMillimeter, mapLengthMillimeter);
             }
             var centerX = mapWidthMillimeter / 2;
-            var centerY = mapLengthMillimeter / 2;
+            var centerY = mapLengthMillimeter / 10;
+            unchecked
+            {
             for (int i = 0; i < pointCloud.Length; i++)
             {
                 var point = pointCloud[i];
                 if (//point.y < sliceHeightMillimeter &&
-                     point.x > -centerX &&
-                     point.z > -centerY &&
-                     point.x < centerX &&
-                     point.z < centerY)
+                         point.x + centerX < mapWidthMillimeter &&
+                         point.z + centerY < mapLengthMillimeter &&
+                         point.x + centerX > 0 &&
+                         point.z + centerY > 0)
                 {
-                    //map[point.x + centerX, point.z + centerY] = new Gray(128);
-                    if (map[point.x + centerX, point.z + centerY].Intensity > 255 -point.y/100.0f)
+                        if (point.y < top && point.y > bottom)
+                            map[(point.x + centerX) , (point.z + centerY) ] = new Gray(255);
+                        /*if (map[point.x + centerX, point.z + centerY].Intensity > point.y)
                     {
-                        map[point.x + centerX, point.z + centerY] = new Gray(255-point.y/100.0f);
+                            map[point.x + centerX, point.z + centerY] = new Gray(point.y);
+                        }*/
                     }
                 }
             }

@@ -1,0 +1,33 @@
+@page "/counter"
+
+<PageTitle>Counter</PageTitle>
+
+<h1>Wanderer</h1>
+
+<p>
+    <RadzenButton Click=BrakesToggle Text="BrakesOn"></RadzenButton>
+</p>
+<RadzenTabs>
+    <Tabs>
+        <RadzenTabsItem Text="Tab 1">
+            <RadzenImage Style="width: 252px; height: 175px" Path="favicon.png"></RadzenImage>
+        </RadzenTabsItem>
+        <RadzenTabsItem Text="Tab2">
+            <RadzenColorPicker></RadzenColorPicker>
+        </RadzenTabsItem>
+    </Tabs>
+</RadzenTabs>
+
+<Viewer UseDefaultScene=@true />
+
+@code {
+    private int currentCount = 0;
+
+    private void IncrementCount()
+    {
+        currentCount++;
+    }
+    public void BrakesToggle()
+    {
+    }
+}

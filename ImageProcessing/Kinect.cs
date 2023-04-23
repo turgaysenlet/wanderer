@@ -32,7 +32,7 @@ namespace Wanderer.Software.ImageProcessing
             config.WiredSyncMode = WiredSyncMode.Standalone;
             device.StartCameras(config);
             State = DeviceStateEnu.Started;
-            transformation = device.GetCalibration().CreateTransformation();            
+            transformation = device.GetCalibration().CreateTransformation();
         }
 
         public void Stop()
@@ -96,19 +96,19 @@ namespace Wanderer.Software.ImageProcessing
             var centerY = mapLengthMillimeter / 10;
             unchecked
             {
-            for (int i = 0; i < pointCloud.Length; i++)
-            {
-                var point = pointCloud[i];
-                if (//point.y < sliceHeightMillimeter &&
+                for (int i = 0; i < pointCloud.Length; i++)
+                {
+                    var point = pointCloud[i];
+                    if (//point.y < sliceHeightMillimeter &&
                          point.x + centerX < mapWidthMillimeter &&
                          point.z + centerY < mapLengthMillimeter &&
                          point.x + centerX > 0 &&
                          point.z + centerY > 0)
-                {
+                    {
                         if (point.y < top && point.y > bottom)
                             map[(point.x + centerX) , (point.z + centerY) ] = new Gray(255);
                         /*if (map[point.x + centerX, point.z + centerY].Intensity > point.y)
-                    {
+                        {
                             map[point.x + centerX, point.z + centerY] = new Gray(point.y);
                         }*/
                     }
